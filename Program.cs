@@ -7,8 +7,8 @@ namespace chess_console
     {
         static void Main(string[] args)
         {
-            var position = new Position(3, 4);
-            Console.WriteLine("Posição: {0}", position);
+            var chessboard = new Chessboard(8, 8);
+            Console.ReadLine();
         }
     }
 }
