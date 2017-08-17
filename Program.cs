@@ -8,6 +8,8 @@ namespace chess_console
         static void Main(string[] args)
         {
             var chessboard = new Chessboard(8, 8);
+
+            View.printChessboard(chessboard);
             Console.ReadLine();
         }
     }
