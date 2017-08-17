@@ -8,10 +8,10 @@ namespace chessboard
             {
                 for (int j = 0; j < chessboard.Columns; j++)
                 {
-                    if (chessboard.piece(i, j) == null) {
+                    if (chessboard.getPiece(i, j) == null) {
                         Console.Write("- ");
                     }
-                    Console.Write(chessboard.piece(i, j) + " ");
+                    Console.Write(chessboard.getPiece(i, j) + " ");
                 }
                 Console.WriteLine();
             }

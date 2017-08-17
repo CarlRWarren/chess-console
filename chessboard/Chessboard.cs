@@ -12,8 +12,13 @@ namespace chessboard
             Pieces = new Piece[lines, columns];
         }
 
-        public Piece piece(int line, int column) {
+        public Piece getPiece(int line, int column) {
             return Pieces[line, column];
+        }
+
+        public void movePiece(Piece piece, Position position) {
+            Pieces[position.Line, position.Column] = piece;
+            piece.Position = position;
         }
     }
 }
