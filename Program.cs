@@ -10,6 +10,7 @@ namespace chess_console
         {
             try
             {
+                /*
                 var chessboard = new Chessboard(8, 8);
 
                 chessboard.movePiece(new Rook(chessboard, Color.Black), new Position(0, 0));
@@ -17,6 +18,10 @@ namespace chess_console
                 chessboard.movePiece(new King(chessboard, Color.Black), new Position(2, 4));
 
                 View.printChessboard(chessboard);
+                */
+
+                var position = new ChessPosition('c', 7);
+                Console.WriteLine(position.toPosition());
                 Console.ReadLine();
             }
             catch (ChessboardException exception)
