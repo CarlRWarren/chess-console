@@ -2,7 +2,7 @@
 using chess;
 using chessboard;
 
-namespace chessboard
+namespace chess_console
 {
     class Program
     {

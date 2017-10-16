@@ -1,7 +1,8 @@
 using System;
 using chess;
+using chessboard;
 
-namespace chessboard
+namespace chess_console
 {
     class View {
         public static void PrintChessboard(Chessboard chessboard) {
