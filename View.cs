@@ -1,9 +1,10 @@
 using System;
+using chess;
 
 namespace chessboard
 {
     class View {
-        public static void printChessboard(Chessboard chessboard) {
+        public static void PrintChessboard(Chessboard chessboard) {
             for (int i = 0; i < chessboard.Lines; i++)
             {
                 Console.Write(8 - i + " ");
@@ -13,7 +14,7 @@ namespace chessboard
                         Console.Write("- ");
                     }
                     else {
-                        printPiece(chessboard.GetPiece(i,j));
+                        PrintPiece(chessboard.GetPiece(i,j));
                         Console.Write(" ");
                     }
                 }
@@ -22,7 +23,16 @@ namespace chessboard
             Console.WriteLine("  a b c d e f g h");
         }
 
-        public static void printPiece(Piece piece) {
+        public static ChessPosition ReadChessPosition()
+        {
+            var consoleEntry = Console.ReadLine();
+            var column = consoleEntry[0];
+            var line = int.Parse(consoleEntry[1] + "");
+            return new ChessPosition(column, line);
+
+        }
+
+        public static void PrintPiece(Piece piece) {
             if (piece.Color == Color.White) {
                 Console.Write(piece);
             }

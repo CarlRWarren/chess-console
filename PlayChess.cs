@@ -6,6 +6,7 @@ namespace chessboard {
         public Chessboard Chessboard {get; private set;}
         private int turn;
         private Color currentPlayer;
+        public bool Ended { get; private set; }
 
         public PlayChess() {
             Chessboard = new Chessboard(8,8);
@@ -32,12 +33,12 @@ namespace chessboard {
             Chessboard.MovePiece(new King(Chessboard, Color.Black), new ChessPosition('d', 8).ToPosition());
         }
 
-        public void PlayMoviment(Position origin, Position destination) {
-            Piece piece = Chessboard.RemovePiece(origin);
+        public void PlayMove(Position from, Position to) {
+            Piece piece = Chessboard.RemovePiece(from);
             piece.IncrementMoves();
 
-            Piece pieceTaken = Chessboard.RemovePiece(destination);
-            Chessboard.MovePiece(piece, destination);
+            Piece pieceTaken = Chessboard.RemovePiece(to);
+            Chessboard.MovePiece(piece, to);
         }
 
 
