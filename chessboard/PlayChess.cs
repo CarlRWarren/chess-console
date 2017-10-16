@@ -3,15 +3,15 @@ using chess;
 
 namespace chessboard {
     class PlayChess {
-        public Chessboard Chessboard {get; private set;}
-        private int turn;
-        private Color currentPlayer;
+        public Chessboard Chessboard {get; private set; }
+        public int Turn {get; private set; }
+        public Color CurrentPlayer {get; private set; }
         public bool Ended { get; private set; }
 
         public PlayChess() {
             Chessboard = new Chessboard(8,8);
-            turn = 1;
-            currentPlayer = Color.White;
+            Turn = 1;
+            CurrentPlayer = Color.White;
             PutPieces();
 
         }
@@ -31,6 +31,20 @@ namespace chessboard {
             Chessboard.MovePiece(new Rook(Chessboard, Color.Black), new ChessPosition('e', 7).ToPosition());
             Chessboard.MovePiece(new Rook(Chessboard, Color.Black), new ChessPosition('e', 8).ToPosition());
             Chessboard.MovePiece(new King(Chessboard, Color.Black), new ChessPosition('d', 8).ToPosition());
+        }
+
+        public void DoTurn(Position from, Position to){
+            PlayMove(from, to);
+            Turn++;
+            ChangeCurrentPlayer();
+        }
+
+        private void ChangeCurrentPlayer()
+        {
+            if (CurrentPlayer.Equals(Color.White))
+                CurrentPlayer = Color.Black;
+            else
+                CurrentPlayer = Color.White;
         }
 
         public void PlayMove(Position from, Position to) {

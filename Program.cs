@@ -15,6 +15,10 @@ namespace chess_console
                 while (!game.Ended) {
                     Console.Clear();
                     View.PrintChessboard(game.Chessboard);
+                    Console.WriteLine();
+
+                    Console.WriteLine("Turn: " + game.Turn);
+                    Console.WriteLine("Waiting Player: " + game.CurrentPlayer);
 
                     Console.WriteLine();
                     Console.Write("From: ");
@@ -29,7 +33,7 @@ namespace chess_console
                     Console.Write("To: ");
                     var to = View.ReadChessPosition().ToPosition();
 
-                    game.PlayMove(from, to);
+                    game.DoTurn(from, to);
                 }
                 Console.ReadLine();
             }
