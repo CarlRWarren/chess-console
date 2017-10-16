@@ -19,6 +19,13 @@ namespace chess_console
                     Console.WriteLine();
                     Console.Write("From: ");
                     var from = View.ReadChessPosition().ToPosition(); 
+
+                    bool[,] possibleMoves = game.Chessboard.GetPiece(from).PossibleMoves();
+                    
+                    Console.Clear();
+                    View.PrintChessboard(game.Chessboard, possibleMoves);
+
+                    Console.WriteLine();
                     Console.Write("To: ");
                     var to = View.ReadChessPosition().ToPosition();
 
