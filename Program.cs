@@ -2,7 +2,7 @@
 using chess;
 using chessboard;
 
-namespace chess_console
+namespace chessboard
 {
     class Program
     {
@@ -10,16 +10,8 @@ namespace chess_console
         {
             try
             {
-                var chessboard = new Chessboard(8, 8);
-
-                chessboard.movePiece(new Rook(chessboard, Color.Black), new Position(0, 0));
-                chessboard.movePiece(new Rook(chessboard, Color.Black), new Position(1, 3));
-                chessboard.movePiece(new King(chessboard, Color.Black), new Position(2, 4));
-
-                chessboard.movePiece(new Rook(chessboard, Color.White), new Position(3, 5));
-
-
-                View.printChessboard(chessboard);
+                var game = new PlayChess();
+                View.printChessboard(game.Chessboard);
                 Console.ReadLine();
             }
             catch (ChessboardException exception)

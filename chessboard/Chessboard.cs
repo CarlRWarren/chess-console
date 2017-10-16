@@ -12,35 +12,45 @@ namespace chessboard
             Pieces = new Piece[lines, columns];
         }
 
-        public Piece getPiece(int line, int column) {
+        public Piece GetPiece(int line, int column) {
             return Pieces[line, column];
         }
 
-        public Piece getPiece(Position position) {
+        public Piece GetPiece(Position position) {
             return Pieces[position.Line, position.Column];
         }
 
-        public bool existPiece(Position position) {
-            validatePosition(position);
-            return getPiece(position) != null;
+        public bool ExistPiece(Position position) {
+            ValidatePosition(position);
+            return GetPiece(position) != null;
         }
 
-        public void movePiece(Piece piece, Position position) {
-            if (existPiece(position))
+        public void MovePiece(Piece piece, Position position) {
+            if (ExistPiece(position))
                 throw new ChessboardException("Can not move this piece.");
             Pieces[position.Line, position.Column] = piece;
             piece.Position = position;
         }
 
-        public bool validPosition(Position position) {
+        public Piece RemovePiece(Position position) {
+            if (GetPiece(position) == null)
+            return null;
+
+            Piece aux = GetPiece(position);
+            aux.Position = null;
+            Pieces[position.Line, position.Column] = null;
+            return aux;
+        }
+
+        public bool ValidPosition(Position position) {
             if (position.Line < 0 || position.Line >= Lines || position.Column < 0 || position.Column >= Columns) {
                 return false;
             }
             return true;
         }
 
-        public void validatePosition(Position position) {
-            if (!validPosition(position))
+        public void ValidatePosition(Position position) {
+            if (!ValidPosition(position))
                 throw new ChessboardException("Invalid position!");
         }
     }

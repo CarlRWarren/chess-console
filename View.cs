@@ -9,17 +9,17 @@ namespace chessboard
                 Console.Write(8 - i + " ");
                 for (int j = 0; j < chessboard.Columns; j++)
                 {
-                    if (chessboard.getPiece(i, j) == null) {
+                    if (chessboard.GetPiece(i, j) == null) {
                         Console.Write("- ");
                     }
                     else {
-                        printPiece(chessboard.getPiece(i,j));
+                        printPiece(chessboard.GetPiece(i,j));
                         Console.Write(" ");
                     }
                 }
                 Console.WriteLine();
             }        
-            Console.WriteLine("  a  b  c  d  e  f  g  h");
+            Console.WriteLine("  a b c d e f g h");
         }
 
         public static void printPiece(Piece piece) {
