@@ -34,7 +34,7 @@ namespace chess_console
                 Console.Write(8 - i + " ");
                 for (int j = 0; j < chessboard.Columns; j++)
                 {
-                    if (possibleMoves[i,j])
+                    if (possibleMoves[i, j])
                         Console.BackgroundColor = changedBackground;
                     else
                         Console.BackgroundColor = defaultBackground;
