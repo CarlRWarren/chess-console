@@ -17,6 +17,19 @@ namespace chessboard
             Moves++;
         }
 
+        public bool CheckPossibleMoves() {
+            var matrix = PossibleMoves();
+            for (int i = 0; i < Chessboard.Lines; i++)
+                for (int j = 0; j < Chessboard.Columns; j++)
+                    if (matrix[ i, j])
+                        return true;
+            return false;
+        }
+
+        public bool CanMoveTo(Position position) {
+            return PossibleMoves()[position.Line, position.Column];
+        }
+
         public abstract bool[,] PossibleMoves();
     }
 }

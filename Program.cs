@@ -13,29 +13,38 @@ namespace chess_console
                 var game = new PlayChess();
                 
                 while (!game.Ended) {
-                    Console.Clear();
-                    View.PrintChessboard(game.Chessboard);
-                    Console.WriteLine();
+                    try
+                    {
+                        Console.Clear();
+                        View.PrintChessboard(game.Chessboard);
+                        Console.WriteLine();
 
-                    Console.WriteLine("Turn: " + game.Turn);
-                    Console.WriteLine("Waiting Player: " + game.CurrentPlayer);
+                        Console.WriteLine("Turn: " + game.Turn);
+                        Console.WriteLine("Waiting Next Move: " + game.CurrentPlayer);
 
-                    Console.WriteLine();
-                    Console.Write("From: ");
-                    var from = View.ReadChessPosition().ToPosition(); 
+                        Console.WriteLine();
+                        Console.Write("From: ");
+                        var from = View.ReadChessPosition().ToPosition();
+                        game.CheckFromPosition(from);
 
-                    bool[,] possibleMoves = game.Chessboard.GetPiece(from).PossibleMoves();
-                    
-                    Console.Clear();
-                    View.PrintChessboard(game.Chessboard, possibleMoves);
+                        bool[,] possibleMoves = game.Chessboard.GetPiece(from).PossibleMoves();
+                        
+                        Console.Clear();
+                        View.PrintChessboard(game.Chessboard, possibleMoves);
 
-                    Console.WriteLine();
-                    Console.Write("To: ");
-                    var to = View.ReadChessPosition().ToPosition();
+                        Console.WriteLine();
+                        Console.Write("To: ");
+                        var to = View.ReadChessPosition().ToPosition();
+                        game.CheckToPosition(from, to);
 
-                    game.DoTurn(from, to);
+                        game.PlayTurn(from, to);
+                    }
+                    catch (ChessboardException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                        Console.ReadLine();
+                    }
                 }
-                Console.ReadLine();
             }
             catch (ChessboardException exception)
             {
