@@ -10,17 +10,13 @@ namespace chess_console
         {
             try
             {
-                var game = new PlayChess();
+                var game = new ChessGame();
                 
                 while (!game.Ended) {
                     try
                     {
                         Console.Clear();
-                        View.PrintChessboard(game.Chessboard);
-                        Console.WriteLine();
-
-                        Console.WriteLine("Turn: " + game.Turn);
-                        Console.WriteLine("Waiting Next Move: " + game.CurrentPlayer);
+                        View.PrintGame(game);
 
                         Console.WriteLine();
                         Console.Write("From: ");
