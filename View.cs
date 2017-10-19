@@ -26,10 +26,17 @@ namespace chess_console
             PrintPiecesTaken(game);
             Console.WriteLine();
             Console.WriteLine("Turn: " + game.Turn);
-            Console.WriteLine("Waiting Next Move: " + game.CurrentPlayer);
 
-            if (game.Mate)
-                Console.WriteLine("MATE!");
+            if (!game.Ended) {
+                Console.WriteLine("Waiting Next Move: " + game.CurrentPlayer);
+
+                if (game.Mate)
+                    Console.WriteLine("MATE!");
+            }
+            else {
+                Console.WriteLine("CheckMate!");
+                Console.WriteLine("Winner: " + game.CurrentPlayer);
+            }
         }
 
         public static void PrintPiecesTaken(ChessGame game)

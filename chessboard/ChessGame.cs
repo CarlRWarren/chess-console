@@ -12,7 +12,7 @@ namespace chessboard
         public bool Ended { get; private set; }
         private HashSet<Piece> pieces;
         private HashSet<Piece> allTaken;
-        public bool Mate {get; private set; }
+        public bool Mate { get; private set; }
 
         public ChessGame()
         {
@@ -36,12 +36,14 @@ namespace chessboard
                 throw new ChessboardException("Impossible to move.");
         }
 
-        public void CheckToPosition(Position from, Position to) {
+        public void CheckToPosition(Position from, Position to)
+        {
             if (!Chessboard.GetPiece(from).CanMoveTo(to))
                 throw new ChessboardException("Invalid position.");
         }
 
-        public HashSet<Piece> PiecesTaken(Color color){
+        public HashSet<Piece> PiecesTaken(Color color)
+        {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach (var piece in allTaken)
             {
@@ -51,7 +53,8 @@ namespace chessboard
             return aux;
         }
 
-        public HashSet<Piece> InGamePieces(Color color){
+        public HashSet<Piece> InGamePieces(Color color)
+        {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach (var piece in pieces)
             {
@@ -62,20 +65,25 @@ namespace chessboard
             return aux;
         }
 
-        private Color Opponent(Color color) {
+        private Color Opponent(Color color)
+        {
             return color == Color.White ? Color.Black : Color.White;
         }
 
-        private Piece King(Color color) {
-            foreach (var piece in InGamePieces(color)) {     
-                if (piece is King) {
+        private Piece King(Color color)
+        {
+            foreach (var piece in InGamePieces(color))
+            {
+                if (piece is King)
+                {
                     return piece;
                 }
             }
             return null;
         }
 
-        public bool CheckMate(Color color) {
+        public bool InMate(Color color)
+        {
             var king = King(color);
             if (king == null)
                 throw new ChessboardException("King " + color + "not found.");
@@ -88,6 +96,33 @@ namespace chessboard
             return false;
         }
 
+        public bool CheckMate(Color color)
+        {
+            if (!InMate(color))
+                return false;
+            foreach (var piece in InGamePieces(color))
+            {
+                bool[,] matrix = piece.PossibleMoves();
+                for (int line = 0; line < Chessboard.Lines; line++)
+                {
+                    for (int column = 0; column < Chessboard.Columns; column++)
+                    {
+                        if (matrix[line, column])
+                        {
+                            var from = piece.Position;
+                            var to = new Position(line, column);
+                            var pieceTaken = PlayMove(from, to);
+                            var inMate = InMate(color);
+                            UndoMove(from, to, pieceTaken);
+                            if (!inMate)
+                                return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
         public void PutNewPiece(char column, int line, Piece piece)
         {
             Chessboard.MovePiece(piece, new ChessPosition(column, line).ToPosition());
@@ -97,39 +132,52 @@ namespace chessboard
         private void PutPieces()
         {
             PutNewPiece('c', 1, new Rook(Chessboard, Color.White));
-            PutNewPiece('c', 2, new Rook(Chessboard, Color.White));
-            PutNewPiece('d', 2, new Rook(Chessboard, Color.White));
-            PutNewPiece('e', 2, new Rook(Chessboard, Color.White));
-            PutNewPiece('e', 1, new Rook(Chessboard, Color.White));
             PutNewPiece('d', 1, new King(Chessboard, Color.White));
+            PutNewPiece('h', 7, new Rook(Chessboard, Color.White));
+
+            PutNewPiece('a', 8, new King(Chessboard, Color.Black));
+            PutNewPiece('b', 8, new Rook(Chessboard, Color.Black));
             
-            PutNewPiece('c', 7, new Rook(Chessboard, Color.Black));
-            PutNewPiece('c', 8, new Rook(Chessboard, Color.Black));
-            PutNewPiece('d', 7, new Rook(Chessboard, Color.Black));
-            PutNewPiece('e', 7, new Rook(Chessboard, Color.Black));
-            PutNewPiece('e', 8, new Rook(Chessboard, Color.Black));
-            PutNewPiece('d', 8, new King(Chessboard, Color.Black));
+            // PutNewPiece('c', 1, new Rook(Chessboard, Color.White));
+            // PutNewPiece('c', 2, new Rook(Chessboard, Color.White));
+            // PutNewPiece('d', 2, new Rook(Chessboard, Color.White));
+            // PutNewPiece('e', 2, new Rook(Chessboard, Color.White));
+            // PutNewPiece('e', 1, new Rook(Chessboard, Color.White));
+            // PutNewPiece('d', 1, new King(Chessboard, Color.White));
+
+            // PutNewPiece('c', 7, new Rook(Chessboard, Color.Black));
+            // PutNewPiece('c', 8, new Rook(Chessboard, Color.Black));
+            // PutNewPiece('d', 7, new Rook(Chessboard, Color.Black));
+            // PutNewPiece('e', 7, new Rook(Chessboard, Color.Black));
+            // PutNewPiece('e', 8, new Rook(Chessboard, Color.Black));
+            // PutNewPiece('d', 8, new King(Chessboard, Color.Black));
         }
 
         public void PlayTurn(Position from, Position to)
         {
             var pieceTaken = PlayMove(from, to);
-            if (CheckMate(CurrentPlayer)) {
+            if (InMate(CurrentPlayer))
+            {
                 UndoMove(from, to, pieceTaken);
                 throw new ChessboardException("You can't put yourself in checkmate.");
             }
-            
-            Mate = CheckMate(Opponent(CurrentPlayer));
 
-            Turn++;
-            ChangeCurrentPlayer();
+            Mate = InMate(Opponent(CurrentPlayer));
+            if (CheckMate(Opponent(CurrentPlayer)))
+                Ended = true;
+            else
+            {
+                Turn++;
+                ChangeCurrentPlayer();
+            }
         }
 
         public void UndoMove(Position from, Position to, Piece pieceTaken)
         {
             var piece = Chessboard.RemovePiece(to);
             piece.DecrementMoves();
-            if (pieceTaken != null) {
+            if (pieceTaken != null)
+            {
                 Chessboard.MovePiece(pieceTaken, to);
                 allTaken.Remove(pieceTaken);
             }

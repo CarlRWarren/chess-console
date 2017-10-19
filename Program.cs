@@ -11,8 +11,9 @@ namespace chess_console
             try
             {
                 var game = new ChessGame();
-                
-                while (!game.Ended) {
+
+                while (!game.Ended)
+                {
                     try
                     {
                         Console.Clear();
@@ -24,7 +25,7 @@ namespace chess_console
                         game.CheckFromPosition(from);
 
                         bool[,] possibleMoves = game.Chessboard.GetPiece(from).PossibleMoves();
-                        
+
                         Console.Clear();
                         View.PrintChessboard(game.Chessboard, possibleMoves);
 
@@ -41,6 +42,8 @@ namespace chess_console
                         Console.ReadLine();
                     }
                 }
+                Console.Clear();
+                View.PrintGame(game);
             }
             catch (ChessboardException exception)
             {
