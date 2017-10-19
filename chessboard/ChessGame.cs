@@ -38,7 +38,7 @@ namespace chessboard
 
         public void CheckToPosition(Position from, Position to)
         {
-            if (!Chessboard.GetPiece(from).CanMoveTo(to))
+            if (!Chessboard.GetPiece(from).PossibleMove(to))
                 throw new ChessboardException("Invalid position.");
         }
 
