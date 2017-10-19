@@ -17,6 +17,10 @@ namespace chessboard
             Moves++;
         }
 
+        public void DecrementMoves() {
+            Moves--;
+        }
+
         public bool CheckPossibleMoves() {
             var matrix = PossibleMoves();
             for (int i = 0; i < Chessboard.Lines; i++)

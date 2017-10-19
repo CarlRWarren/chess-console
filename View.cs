@@ -27,6 +27,9 @@ namespace chess_console
             Console.WriteLine();
             Console.WriteLine("Turn: " + game.Turn);
             Console.WriteLine("Waiting Next Move: " + game.CurrentPlayer);
+
+            if (game.Mate)
+                Console.WriteLine("MATE!");
         }
 
         public static void PrintPiecesTaken(ChessGame game)

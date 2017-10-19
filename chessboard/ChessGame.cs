@@ -12,12 +12,15 @@ namespace chessboard
         public bool Ended { get; private set; }
         private HashSet<Piece> pieces;
         private HashSet<Piece> allTaken;
+        public bool Mate {get; private set; }
 
         public ChessGame()
         {
             Chessboard = new Chessboard(8, 8);
             Turn = 1;
             CurrentPlayer = Color.White;
+            Ended = false;
+            Mate = false;
             pieces = new HashSet<Piece>();
             allTaken = new HashSet<Piece>();
             PutPieces();
@@ -59,6 +62,32 @@ namespace chessboard
             return aux;
         }
 
+        private Color Opponent(Color color) {
+            return color == Color.White ? Color.Black : Color.White;
+        }
+
+        private Piece King(Color color) {
+            foreach (var piece in InGamePieces(color)) {     
+                if (piece is King) {
+                    return piece;
+                }
+            }
+            return null;
+        }
+
+        public bool CheckMate(Color color) {
+            var king = King(color);
+            if (king == null)
+                throw new ChessboardException("King " + color + "not found.");
+            foreach (var piece in InGamePieces(Opponent(color)))
+            {
+                bool[,] matrix = piece.PossibleMoves();
+                if (matrix[king.Position.Line, king.Position.Column])
+                    return true;
+            }
+            return false;
+        }
+
         public void PutNewPiece(char column, int line, Piece piece)
         {
             Chessboard.MovePiece(piece, new ChessPosition(column, line).ToPosition());
@@ -84,9 +113,27 @@ namespace chessboard
 
         public void PlayTurn(Position from, Position to)
         {
-            PlayMove(from, to);
+            var pieceTaken = PlayMove(from, to);
+            if (CheckMate(CurrentPlayer)) {
+                UndoMove(from, to, pieceTaken);
+                throw new ChessboardException("You can't put yourself in checkmate.");
+            }
+            
+            Mate = CheckMate(Opponent(CurrentPlayer));
+
             Turn++;
             ChangeCurrentPlayer();
+        }
+
+        public void UndoMove(Position from, Position to, Piece pieceTaken)
+        {
+            var piece = Chessboard.RemovePiece(to);
+            piece.DecrementMoves();
+            if (pieceTaken != null) {
+                Chessboard.MovePiece(pieceTaken, to);
+                allTaken.Remove(pieceTaken);
+            }
+            Chessboard.MovePiece(piece, from);
         }
 
         private void ChangeCurrentPlayer()
@@ -97,7 +144,7 @@ namespace chessboard
                 CurrentPlayer = Color.White;
         }
 
-        public void PlayMove(Position from, Position to)
+        public Piece PlayMove(Position from, Position to)
         {
             Piece piece = Chessboard.RemovePiece(from);
             piece.IncrementMoves();
@@ -107,6 +154,8 @@ namespace chessboard
 
             if (pieceTaken != null)
                 allTaken.Add(pieceTaken);
+
+            return pieceTaken;
         }
 
 
