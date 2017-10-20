@@ -131,26 +131,39 @@ namespace chessboard
 
         private void PutPieces()
         {
-            PutNewPiece('c', 1, new Rook(Chessboard, Color.White));
-            PutNewPiece('d', 1, new King(Chessboard, Color.White));
-            PutNewPiece('h', 7, new Rook(Chessboard, Color.White));
+            PutNewPiece('a', 1, new Rook(Chessboard, Color.White));
+            PutNewPiece('b', 1, new Knight(Chessboard, Color.White));
+            PutNewPiece('c', 1, new Bishop(Chessboard, Color.White));
+            PutNewPiece('d', 1, new Queen(Chessboard, Color.White));
+            PutNewPiece('e', 1, new King(Chessboard, Color.White));
+            PutNewPiece('f', 1, new Bishop(Chessboard, Color.White));
+            PutNewPiece('g', 1, new Knight(Chessboard, Color.White));
+            PutNewPiece('h', 1, new Rook(Chessboard, Color.White));
+            PutNewPiece('a', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('b', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('c', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('d', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('e', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('f', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('g', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('h', 2, new Pawn(Chessboard, Color.White));
 
-            PutNewPiece('a', 8, new King(Chessboard, Color.Black));
-            PutNewPiece('b', 8, new Rook(Chessboard, Color.Black));
-            
-            // PutNewPiece('c', 1, new Rook(Chessboard, Color.White));
-            // PutNewPiece('c', 2, new Rook(Chessboard, Color.White));
-            // PutNewPiece('d', 2, new Rook(Chessboard, Color.White));
-            // PutNewPiece('e', 2, new Rook(Chessboard, Color.White));
-            // PutNewPiece('e', 1, new Rook(Chessboard, Color.White));
-            // PutNewPiece('d', 1, new King(Chessboard, Color.White));
-
-            // PutNewPiece('c', 7, new Rook(Chessboard, Color.Black));
-            // PutNewPiece('c', 8, new Rook(Chessboard, Color.Black));
-            // PutNewPiece('d', 7, new Rook(Chessboard, Color.Black));
-            // PutNewPiece('e', 7, new Rook(Chessboard, Color.Black));
-            // PutNewPiece('e', 8, new Rook(Chessboard, Color.Black));
-            // PutNewPiece('d', 8, new King(Chessboard, Color.Black));
+            PutNewPiece('a', 8, new Rook(Chessboard, Color.Black));
+            PutNewPiece('b', 8, new Knight(Chessboard, Color.Black));
+            PutNewPiece('c', 8, new Bishop(Chessboard, Color.Black));
+            PutNewPiece('d', 8, new Queen(Chessboard, Color.Black));
+            PutNewPiece('e', 8, new King(Chessboard, Color.Black));
+            PutNewPiece('f', 8, new Bishop(Chessboard, Color.Black));
+            PutNewPiece('g', 8, new Knight(Chessboard, Color.Black));
+            PutNewPiece('h', 8, new Rook(Chessboard, Color.Black));
+            PutNewPiece('a', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('b', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('c', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('d', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('e', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('f', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('g', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('h', 7, new Pawn(Chessboard, Color.Black));
         }
 
         public void PlayTurn(Position from, Position to)

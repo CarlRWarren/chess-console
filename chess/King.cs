@@ -8,7 +8,8 @@ namespace chess
         {
         }
 
-        private bool CanMove(Position position){
+        private bool CanMove(Position position)
+        {
             var piece = Chessboard.GetPiece(position);
             return piece == null || piece.Color != this.Color;
         }
@@ -18,7 +19,7 @@ namespace chess
             bool[,] matrix = new bool[Chessboard.Lines, Chessboard.Columns];
 
             var position = new Position(0, 0);
-            
+
             // N
             position.SetValues(Position.Line - 1, Position.Column);
             if (Chessboard.ValidPosition(position) && CanMove(position))
@@ -33,7 +34,7 @@ namespace chess
             position.SetValues(Position.Line, Position.Column + 1);
             if (Chessboard.ValidPosition(position) && CanMove(position))
                 matrix[position.Line, position.Column] = true;
-            
+
             // SE
             position.SetValues(Position.Line + 1, Position.Column + 1);
             if (Chessboard.ValidPosition(position) && CanMove(position))
@@ -43,12 +44,12 @@ namespace chess
             position.SetValues(Position.Line + 1, Position.Column);
             if (Chessboard.ValidPosition(position) && CanMove(position))
                 matrix[position.Line, position.Column] = true;
-            
+
             // SW
             position.SetValues(Position.Line + 1, Position.Column - 1);
             if (Chessboard.ValidPosition(position) && CanMove(position))
                 matrix[position.Line, position.Column] = true;
-            
+
             // W
             position.SetValues(Position.Line, Position.Column - 1);
             if (Chessboard.ValidPosition(position) && CanMove(position))
@@ -62,7 +63,8 @@ namespace chess
             return matrix;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             return "K";
         }
     }
