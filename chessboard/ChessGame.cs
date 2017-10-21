@@ -176,7 +176,20 @@ namespace chessboard
                 UndoMove(from, to, pieceTaken);
                 throw new ChessboardException("You can't put yourself in checkmate.");
             }
-
+            
+            var piece = Chessboard.GetPiece(to);
+            // #SpecialMove Promotion
+            if (piece is Pawn) {
+                if ((piece.Color == Color.White && to.Line == 0) || (piece.Color == Color.Black && to.Line == 7))
+                {
+                    piece = Chessboard.RemovePiece(to);
+                    pieces.Remove(piece);
+                    var queen = new Queen(Chessboard, piece.Color); // Only Queen, without options.
+                    Chessboard.MovePiece(queen, to);
+                    pieces.Add(queen);
+                }
+            }
+            
             Mate = InMate(Opponent(CurrentPlayer));
             if (CheckMate(Opponent(CurrentPlayer)))
                 Ended = true;
@@ -187,7 +200,6 @@ namespace chessboard
             }
 
             // #SpecialMove En Passant
-            var piece = Chessboard.GetPiece(to);
             if (piece is Pawn && (to.Line == from.Line - 2 || to.Line == from.Line + 2))
                 enPassantCandidate = piece;
             else
@@ -239,7 +251,6 @@ namespace chessboard
                     Chessboard.MovePiece(pawn, pawnPosition);
                 }    
             }
-
         }
 
         private void ChangeCurrentPlayer()
