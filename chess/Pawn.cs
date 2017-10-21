@@ -2,8 +2,10 @@ using chessboard;
 
 class Pawn : Piece
 {
-    public Pawn(Chessboard chessboard, Color color) : base(chessboard, color)
+    private ChessGame game;
+    public Pawn(Chessboard chessboard, Color color, ChessGame game) : base(chessboard, color)
     {
+        this.game = game;
     }
 
     private bool CanMove(Position position)
@@ -46,6 +48,17 @@ class Pawn : Piece
             position.SetValues(Position.Line - 1, Position.Column + 1);
             if (Chessboard.ValidPosition(position) && ExistsOpponent(position))
                 matrix[position.Line, position.Column] = true;
+
+            // #SpecialMove En Passant
+            if (Position.Line == 3)
+            {
+                var left = new Position(Position.Line, Position.Column - 1);
+                if (Chessboard.ValidPosition(left) && ExistsOpponent(left) && Chessboard.GetPiece(left) == game.enPassantCandidate)
+                    matrix[left.Line - 1, left.Column] = true;
+                var right = new Position(Position.Line, Position.Column + 1);
+                if (Chessboard.ValidPosition(right) && ExistsOpponent(right) && Chessboard.GetPiece(right) == game.enPassantCandidate)
+                    matrix[right.Line - 1, right.Column] = true;
+            }
         }
         else
         {
@@ -64,6 +77,17 @@ class Pawn : Piece
             position.SetValues(Position.Line + 1, Position.Column + 1);
             if (Chessboard.ValidPosition(position) && ExistsOpponent(position))
                 matrix[position.Line, position.Column] = true;
+            
+            // #SpecialMove En Passant
+            if (Position.Line == 4)
+            {
+                var left = new Position(Position.Line, Position.Column - 1);
+                if (Chessboard.ValidPosition(left) && ExistsOpponent(left) && Chessboard.GetPiece(left) == game.enPassantCandidate)
+                    matrix[left.Line + 1, left.Column] = true;
+                var right = new Position(Position.Line, Position.Column + 1);
+                if (Chessboard.ValidPosition(right) && ExistsOpponent(right) && Chessboard.GetPiece(right) == game.enPassantCandidate)
+                    matrix[right.Line + 1, right.Column] = true;
+            }
         }
 
         return matrix;

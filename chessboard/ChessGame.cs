@@ -13,6 +13,7 @@ namespace chessboard
         private HashSet<Piece> pieces;
         private HashSet<Piece> allTaken;
         public bool Mate { get; private set; }
+        public Piece enPassantCandidate {get; private set; }
 
         public ChessGame()
         {
@@ -21,6 +22,7 @@ namespace chessboard
             CurrentPlayer = Color.White;
             Ended = false;
             Mate = false;
+            enPassantCandidate = null;
             pieces = new HashSet<Piece>();
             allTaken = new HashSet<Piece>();
             PutPieces();
@@ -139,14 +141,14 @@ namespace chessboard
             PutNewPiece('f', 1, new Bishop(Chessboard, Color.White));
             PutNewPiece('g', 1, new Knight(Chessboard, Color.White));
             PutNewPiece('h', 1, new Rook(Chessboard, Color.White));
-            PutNewPiece('a', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('b', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('c', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('d', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('e', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('f', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('g', 2, new Pawn(Chessboard, Color.White));
-            PutNewPiece('h', 2, new Pawn(Chessboard, Color.White));
+            PutNewPiece('a', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('b', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('c', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('d', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('e', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('f', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('g', 2, new Pawn(Chessboard, Color.White, this));
+            PutNewPiece('h', 2, new Pawn(Chessboard, Color.White, this));
 
             PutNewPiece('a', 8, new Rook(Chessboard, Color.Black));
             PutNewPiece('b', 8, new Knight(Chessboard, Color.Black));
@@ -156,14 +158,14 @@ namespace chessboard
             PutNewPiece('f', 8, new Bishop(Chessboard, Color.Black));
             PutNewPiece('g', 8, new Knight(Chessboard, Color.Black));
             PutNewPiece('h', 8, new Rook(Chessboard, Color.Black));
-            PutNewPiece('a', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('b', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('c', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('d', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('e', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('f', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('g', 7, new Pawn(Chessboard, Color.Black));
-            PutNewPiece('h', 7, new Pawn(Chessboard, Color.Black));
+            PutNewPiece('a', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('b', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('c', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('d', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('e', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('f', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('g', 7, new Pawn(Chessboard, Color.Black, this));
+            PutNewPiece('h', 7, new Pawn(Chessboard, Color.Black, this));
         }
 
         public void PlayTurn(Position from, Position to)
@@ -183,6 +185,13 @@ namespace chessboard
                 Turn++;
                 ChangeCurrentPlayer();
             }
+
+            // #SpecialMove En Passant
+            var piece = Chessboard.GetPiece(to);
+            if (piece is Pawn && (to.Line == from.Line - 2 || to.Line == from.Line + 2))
+                enPassantCandidate = piece;
+            else
+                enPassantCandidate = null;
         }
 
         public void UndoMove(Position from, Position to, Piece pieceTaken)
@@ -198,7 +207,7 @@ namespace chessboard
 
             // #SpecialMove Roque Pequeno
             if (piece is King && to.Column == from.Column + 2)
-            { 
+            {
                 var rookFrom = new Position(from.Line, from.Column + 3);
                 var rookTo = new Position(from.Line, from.Column + 1);
                 var rook = Chessboard.RemovePiece(rookTo);
@@ -208,13 +217,29 @@ namespace chessboard
 
             // #SpecialMove Roque Grande
             if (piece is King && to.Column == from.Column - 2)
-            { 
+            {
                 var rookFrom = new Position(from.Line, from.Column - 4);
                 var rookTo = new Position(from.Line, from.Column - 1);
                 var rook = Chessboard.RemovePiece(rookTo);
                 rook.IncrementMoves();
                 Chessboard.MovePiece(rook, rookFrom);
-            } 
+            }
+
+            // #SpecialMove En Passant
+            if (piece is Pawn)
+            {
+                if (from.Column != to.Column && pieceTaken == enPassantCandidate)
+                {
+                    var pawn = Chessboard.RemovePiece(to);
+                    Position pawnPosition;
+                    if (piece.Color == Color.White)
+                        pawnPosition = new Position(3, to.Column);
+                    else
+                        pawnPosition = new Position(4, to.Column);
+                    Chessboard.MovePiece(pawn, pawnPosition);
+                }    
+            }
+
         }
 
         private void ChangeCurrentPlayer()
@@ -238,7 +263,7 @@ namespace chessboard
 
             // #SpecialMove Roque Pequeno
             if (piece is King && to.Column == from.Column + 2)
-            { 
+            {
                 var rookFrom = new Position(from.Line, from.Column + 3);
                 var rookTo = new Position(from.Line, from.Column + 1);
                 var rook = Chessboard.RemovePiece(rookFrom);
@@ -248,17 +273,31 @@ namespace chessboard
 
             // #SpecialMove Roque Grande
             if (piece is King && to.Column == from.Column - 2)
-            { 
+            {
                 var rookFrom = new Position(from.Line, from.Column - 4);
                 var rookTo = new Position(from.Line, from.Column - 1);
                 var rook = Chessboard.RemovePiece(rookFrom);
                 rook.IncrementMoves();
                 Chessboard.MovePiece(rook, rookTo);
-            }            
+            }
+
+            // #SpecialMove En Passant
+            if (piece is Pawn)
+            {
+                if (from.Column != to.Column && pieceTaken == null)
+                {
+                    Position pawnPosition;
+                    if (piece.Color == Color.White)
+                        pawnPosition = new Position(to.Line + 1, to.Column);
+                    else
+                        pawnPosition = new Position(to.Line - 1, to.Column);
+                    pieceTaken = Chessboard.RemovePiece(pawnPosition);
+                    allTaken.Add(pieceTaken);
+                }
+
+            }
 
             return pieceTaken;
         }
-
-
     }
 }
