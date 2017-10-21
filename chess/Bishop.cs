@@ -26,7 +26,7 @@ namespace chess
                 matrix[position.Line, position.Column] = true;
                 if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
                     break;
-                position.SetValues(position.Line - 1, Position.Column - 1);
+                position.SetValues(position.Line - 1, position.Column - 1);
             }
 
             // NE
@@ -36,7 +36,7 @@ namespace chess
                 matrix[position.Line, position.Column] = true;
                 if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
                     break;
-                position.SetValues(position.Line - 1, Position.Column + 1);
+                position.SetValues(position.Line - 1, position.Column + 1);
             }
 
             // SE

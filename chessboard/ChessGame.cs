@@ -135,7 +135,7 @@ namespace chessboard
             PutNewPiece('b', 1, new Knight(Chessboard, Color.White));
             PutNewPiece('c', 1, new Bishop(Chessboard, Color.White));
             PutNewPiece('d', 1, new Queen(Chessboard, Color.White));
-            PutNewPiece('e', 1, new King(Chessboard, Color.White));
+            PutNewPiece('e', 1, new King(Chessboard, Color.White, this));
             PutNewPiece('f', 1, new Bishop(Chessboard, Color.White));
             PutNewPiece('g', 1, new Knight(Chessboard, Color.White));
             PutNewPiece('h', 1, new Rook(Chessboard, Color.White));
@@ -152,7 +152,7 @@ namespace chessboard
             PutNewPiece('b', 8, new Knight(Chessboard, Color.Black));
             PutNewPiece('c', 8, new Bishop(Chessboard, Color.Black));
             PutNewPiece('d', 8, new Queen(Chessboard, Color.Black));
-            PutNewPiece('e', 8, new King(Chessboard, Color.Black));
+            PutNewPiece('e', 8, new King(Chessboard, Color.Black, this));
             PutNewPiece('f', 8, new Bishop(Chessboard, Color.Black));
             PutNewPiece('g', 8, new Knight(Chessboard, Color.Black));
             PutNewPiece('h', 8, new Rook(Chessboard, Color.Black));
@@ -195,6 +195,26 @@ namespace chessboard
                 allTaken.Remove(pieceTaken);
             }
             Chessboard.MovePiece(piece, from);
+
+            // #SpecialMove Roque Pequeno
+            if (piece is King && to.Column == from.Column + 2)
+            { 
+                var rookFrom = new Position(from.Line, from.Column + 3);
+                var rookTo = new Position(from.Line, from.Column + 1);
+                var rook = Chessboard.RemovePiece(rookTo);
+                rook.DecrementMoves();
+                Chessboard.MovePiece(rook, rookFrom);
+            }
+
+            // #SpecialMove Roque Grande
+            if (piece is King && to.Column == from.Column - 2)
+            { 
+                var rookFrom = new Position(from.Line, from.Column - 4);
+                var rookTo = new Position(from.Line, from.Column - 1);
+                var rook = Chessboard.RemovePiece(rookTo);
+                rook.IncrementMoves();
+                Chessboard.MovePiece(rook, rookFrom);
+            } 
         }
 
         private void ChangeCurrentPlayer()
@@ -215,6 +235,26 @@ namespace chessboard
 
             if (pieceTaken != null)
                 allTaken.Add(pieceTaken);
+
+            // #SpecialMove Roque Pequeno
+            if (piece is King && to.Column == from.Column + 2)
+            { 
+                var rookFrom = new Position(from.Line, from.Column + 3);
+                var rookTo = new Position(from.Line, from.Column + 1);
+                var rook = Chessboard.RemovePiece(rookFrom);
+                rook.IncrementMoves();
+                Chessboard.MovePiece(rook, rookTo);
+            }
+
+            // #SpecialMove Roque Grande
+            if (piece is King && to.Column == from.Column - 2)
+            { 
+                var rookFrom = new Position(from.Line, from.Column - 4);
+                var rookTo = new Position(from.Line, from.Column - 1);
+                var rook = Chessboard.RemovePiece(rookFrom);
+                rook.IncrementMoves();
+                Chessboard.MovePiece(rook, rookTo);
+            }            
 
             return pieceTaken;
         }
