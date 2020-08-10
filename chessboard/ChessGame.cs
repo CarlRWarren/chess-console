@@ -4,7 +4,7 @@ using chess;
 
 namespace chessboard
 {
-    class ChessGame
+    public class ChessGame
     {
         public Chessboard Chessboard { get; private set; }
         public int Turn { get; private set; }
@@ -13,7 +13,7 @@ namespace chessboard
         private HashSet<Piece> pieces;
         private HashSet<Piece> allTaken;
         public bool Mate { get; private set; }
-        public Piece enPassantCandidate { get; private set; }
+        public Piece EnPassantCandidate { get; private set; }
 
         public ChessGame()
         {
@@ -22,11 +22,20 @@ namespace chessboard
             CurrentPlayer = Color.White;
             Ended = false;
             Mate = false;
-            enPassantCandidate = null;
+            EnPassantCandidate = null;
             pieces = new HashSet<Piece>();
             allTaken = new HashSet<Piece>();
             //Make a menu
-            PutPieces(/*pass in their choice*/0);
+            int choice = 0;
+            int.TryParse(Menu(), out choice);
+            Console.Clear();
+            PutPieces(choice);
+        }
+
+        private string Menu()
+        {
+            Console.WriteLine("What board setup do you want?\n1.Normal\n2.Chess 960");
+            return Console.ReadLine();
         }
 
         public void CheckFromPosition(Position position)
@@ -132,7 +141,7 @@ namespace chessboard
             pieces.Add(piece);
         }
 
-        private void PutPieces(int choice)
+        public HashSet<Piece> PutPieces(int choice)
         {
             if (choice == 0)//normal
             {
@@ -157,67 +166,7 @@ namespace chessboard
             }
             else//960
             {
-                char[] columns = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
-                List<int> randoms = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7};
-                Random random = new Random();
-                int rook1 = random.Next(0, 8);
-                randoms.Remove(rook1);
-                PutNewPiece(columns[rook1], 1, new Rook(Chessboard, Color.White));
-                PutNewPiece(columns[rook1], 8, new Rook(Chessboard, Color.Black));
-
-                int rook2=100;
-                bool invalid = true;
-                if (rook1 == 0)
-                {
-                    rook2 = random.Next(2, 8);
-                }
-                else if(rook1 == 7)
-                {
-                    rook2 = random.Next(0, 6);
-                }
-                else
-                {
-                    while (invalid)
-                    {
-                        rook2 = random.Next(0, 8);
-                        if(rook2 + 1 != rook1 && rook2 - 1 != rook1 && rook2!=rook1)
-                        {
-                            invalid = false;
-                        }
-
-                    }
-
-                }
-                PutNewPiece(columns[rook2], 1, new Rook(Chessboard, Color.White));
-                PutNewPiece(columns[rook2], 8, new Rook(Chessboard, Color.Black));
-                randoms.Remove(rook2);
-
-                int lrook = rook1 < rook2 ? rook1 : rook2;
-                int rrook = rook1 < rook2 ? rook2 : rook1;
-                int king = random.Next(lrook+1,rrook);
-                PutNewPiece(columns[king], 1, new King(Chessboard, Color.White, this));
-                PutNewPiece(columns[king], 8, new King(Chessboard, Color.Black, this));
-                randoms.Remove(king);
-
-                int bishop1;
-                bishop1 = PlacePiece(randoms);
-                PutNewPiece(columns[bishop1], 1, new Bishop(Chessboard, Color.White));
-                PutNewPiece(columns[bishop1], 8, new Bishop(Chessboard, Color.Black));
-                randoms.Remove(bishop1);
-
-                int bishop2=100;
-                invalid = true;
-                while (invalid)
-                {
-                    bishop2 = PlacePiece(randoms);
-                    if(bishop1 % 2!=0 && bishop2 % 2 == 0 || bishop1 % 2 == 0 && bishop2 % 2 != 0)
-                    {
-                        invalid = false;
-                    }
-                }
-                PutNewPiece(columns[bishop2], 1, new Bishop(Chessboard, Color.White));
-                PutNewPiece(columns[bishop2], 8, new Bishop(Chessboard, Color.Black));
-                randoms.Remove(bishop2);
+                SetUpRanked(); 
             }
 
 
@@ -238,9 +187,99 @@ namespace chessboard
             PutNewPiece('f', 7, new Pawn(Chessboard, Color.Black, this));
             PutNewPiece('g', 7, new Pawn(Chessboard, Color.Black, this));
             PutNewPiece('h', 7, new Pawn(Chessboard, Color.Black, this));
+
+            return pieces;
         }
 
-        private int PlacePiece(List<int> randoms)
+        private char[] SetUpRanked()
+        {
+            char[] order = new char[8];
+            char[] columns = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+            List<int> randoms = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7 };
+            Random random = new Random();
+            int rook1 = random.Next(0, 8);
+            order[rook1] = 'r';
+            PutNewPiece(columns[rook1], 1, new Rook(Chessboard, Color.White));
+            PutNewPiece(columns[rook1], 8, new Rook(Chessboard, Color.Black));
+            randoms.Remove(rook1);
+
+            int rook2 = 100;
+            bool invalid = true;
+            if (rook1 == 0)
+            {
+                rook2 = random.Next(2, 8);
+            }
+            else if (rook1 == 7)
+            {
+                rook2 = random.Next(0, 6);
+            }
+            else
+            {
+                while (invalid)
+                {
+                    rook2 = random.Next(0, 8);
+                    if (rook2 + 1 != rook1 && rook2 - 1 != rook1 && rook2 != rook1)
+                    {
+                        invalid = false;
+                    }
+
+                }
+
+            }
+            order[rook2] = 'r';
+            PutNewPiece(columns[rook2], 1, new Rook(Chessboard, Color.White));
+            PutNewPiece(columns[rook2], 8, new Rook(Chessboard, Color.Black));
+            randoms.Remove(rook2);
+
+            int lrook = rook1 < rook2 ? rook1 : rook2;
+            int rrook = rook1 < rook2 ? rook2 : rook1;
+            int king = random.Next(lrook + 1, rrook);
+            order[king] = 'k';
+            PutNewPiece(columns[king], 1, new King(Chessboard, Color.White, this));
+            PutNewPiece(columns[king], 8, new King(Chessboard, Color.Black, this));
+            randoms.Remove(king);
+
+            int bishop1 = PlacePiece(randoms);
+            order[bishop1] = 'b';
+            PutNewPiece(columns[bishop1], 1, new Bishop(Chessboard, Color.White));
+            PutNewPiece(columns[bishop1], 8, new Bishop(Chessboard, Color.Black));
+            randoms.Remove(bishop1);
+
+            int bishop2 = 100;
+            invalid = true;
+            while (invalid)
+            {
+                bishop2 = PlacePiece(randoms);
+                if (bishop1 % 2 != 0 && bishop2 % 2 == 0 || bishop1 % 2 == 0 && bishop2 % 2 != 0)
+                {
+                    invalid = false;
+                }
+            }
+            order[bishop2] = 'b';
+            PutNewPiece(columns[bishop2], 1, new Bishop(Chessboard, Color.White));
+            PutNewPiece(columns[bishop2], 8, new Bishop(Chessboard, Color.Black));
+            randoms.Remove(bishop2);
+
+            int knight1 = PlacePiece(randoms);
+            order[knight1] = 'n';
+            PutNewPiece(columns[knight1], 1, new Knight(Chessboard, Color.White));
+            PutNewPiece(columns[knight1], 8, new Knight(Chessboard, Color.Black));
+            randoms.Remove(knight1);
+
+            int knight2 = PlacePiece(randoms);
+            order[knight2] = 'n';
+            PutNewPiece(columns[knight2], 1, new Knight(Chessboard, Color.White));
+            PutNewPiece(columns[knight2], 8, new Knight(Chessboard, Color.Black));
+            randoms.Remove(knight2);
+
+            order[randoms[0]] = 'q';
+            PutNewPiece(columns[randoms[0]], 1, new Queen(Chessboard, Color.White));
+            PutNewPiece(columns[randoms[0]], 8, new Queen(Chessboard, Color.Black));
+
+            return order;
+        }
+
+        public int PlacePiece(List<int> randoms)
         {
             bool invalid = true;
             Random random = new Random();
@@ -291,9 +330,9 @@ namespace chessboard
 
             // #SpecialMove En Passant
             if (piece is Pawn && (to.Line == from.Line - 2 || to.Line == from.Line + 2))
-                enPassantCandidate = piece;
+                EnPassantCandidate = piece;
             else
-                enPassantCandidate = null;
+                EnPassantCandidate = null;
         }
 
         public void UndoMove(Position from, Position to, Piece pieceTaken)
@@ -330,7 +369,7 @@ namespace chessboard
             // #SpecialMove En Passant
             if (piece is Pawn)
             {
-                if (from.Column != to.Column && pieceTaken == enPassantCandidate)
+                if (from.Column != to.Column && pieceTaken == EnPassantCandidate)
                 {
                     var pawn = Chessboard.RemovePiece(to);
                     Position pawnPosition;

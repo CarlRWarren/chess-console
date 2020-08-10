@@ -2,7 +2,7 @@ using chessboard;
 
 namespace chess
 {
-    class ChessPosition
+    public class ChessPosition
     {
         public char Column { get; set; }
         public int Line { get; set; }

@@ -2,7 +2,7 @@ using chessboard;
 
 namespace chess
 {
-    class King : Piece
+    public class King : Piece
     {
         private ChessGame game;
         public King(Chessboard chessboard, Color color, ChessGame game) : base(chessboard, color)

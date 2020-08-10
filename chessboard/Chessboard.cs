@@ -1,6 +1,6 @@
 namespace chessboard
 {
-    class Chessboard
+    public class Chessboard
     {
         public int Lines { get; set; }
         public int Columns { get; set; }

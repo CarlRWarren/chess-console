@@ -1,108 +1,113 @@
 using chessboard;
 
-class Queen : Piece
+namespace chess
 {
-    public Queen(Chessboard chessboard, Color color) : base(chessboard, color)
+
+
+    public class Queen : Piece
     {
-    }
-
-    private bool CanMove(Position position)
-    {
-        var piece = Chessboard.GetPiece(position);
-        return piece == null || piece.Color != this.Color;
-    }
-
-    public override bool[,] PossibleMoves()
-    {
-        bool[,] matrix = new bool[Chessboard.Lines, Chessboard.Columns];
-
-        var position = new Position(0, 0);
-
-        // N
-        position.SetValues(Position.Line - 1, Position.Column);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
+        public Queen(Chessboard chessboard, Color color) : base(chessboard, color)
         {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(position.Line - 1, Position.Column);
         }
 
-        // S
-        position.SetValues(Position.Line + 1, Position.Column);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
+        private bool CanMove(Position position)
         {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(position.Line + 1, Position.Column);
+            var piece = Chessboard.GetPiece(position);
+            return piece == null || piece.Color != this.Color;
         }
 
-        // E
-        position.SetValues(Position.Line, Position.Column + 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
+        public override bool[,] PossibleMoves()
         {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(Position.Line, position.Column + 1);
+            bool[,] matrix = new bool[Chessboard.Lines, Chessboard.Columns];
+
+            var position = new Position(0, 0);
+
+            // N
+            position.SetValues(Position.Line - 1, Position.Column);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(position.Line - 1, Position.Column);
+            }
+
+            // S
+            position.SetValues(Position.Line + 1, Position.Column);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(position.Line + 1, Position.Column);
+            }
+
+            // E
+            position.SetValues(Position.Line, Position.Column + 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(Position.Line, position.Column + 1);
+            }
+
+            // W
+            position.SetValues(Position.Line, Position.Column - 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(Position.Line, position.Column - 1);
+            }
+
+            // NO
+            position.SetValues(Position.Line - 1, Position.Column - 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(position.Line - 1, Position.Column - 1);
+            }
+
+            // NE
+            position.SetValues(Position.Line - 1, Position.Column + 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(position.Line - 1, Position.Column + 1);
+            }
+
+            // SE
+            position.SetValues(Position.Line + 1, Position.Column + 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(Position.Line + 1, position.Column + 1);
+            }
+
+            // W
+            position.SetValues(Position.Line + 1, Position.Column - 1);
+            while (Chessboard.ValidPosition(position) && CanMove(position))
+            {
+                matrix[position.Line, position.Column] = true;
+                if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
+                    break;
+                position.SetValues(Position.Line + 1, position.Column - 1);
+            }
+
+            return matrix;
         }
 
-        // W
-        position.SetValues(Position.Line, Position.Column - 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
+        public override string ToString()
         {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(Position.Line, position.Column - 1);
+            return "Q";
         }
-
-        // NO
-        position.SetValues(Position.Line - 1, Position.Column - 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
-        {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(position.Line - 1, Position.Column - 1);
-        }
-
-        // NE
-        position.SetValues(Position.Line - 1, Position.Column + 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
-        {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(position.Line - 1, Position.Column + 1);
-        }
-
-        // SE
-        position.SetValues(Position.Line + 1, Position.Column + 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
-        {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(Position.Line + 1, position.Column + 1);
-        }
-
-        // W
-        position.SetValues(Position.Line + 1, Position.Column - 1);
-        while (Chessboard.ValidPosition(position) && CanMove(position))
-        {
-            matrix[position.Line, position.Column] = true;
-            if (Chessboard.GetPiece(position) != null && Chessboard.GetPiece(position).Color != Color)
-                break;
-            position.SetValues(Position.Line + 1, position.Column - 1);
-        }
-
-        return matrix;
-    }
-
-    public override string ToString()
-    {
-        return "Q";
     }
 }
